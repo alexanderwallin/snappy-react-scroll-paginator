@@ -51,7 +51,7 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
     <ScrollingChild
       axis={Axis.X}
       initialPage={0}
-      pageWidth={100}
+      pageSize={100}
       scrollDuration={10}
     />
   )
@@ -64,7 +64,7 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
     <ScrollingChild
       axis={Axis.Y}
       initialPage={0}
-      pageHeight={100}
+      pageSize={100}
       scrollDuration={10}
     />
   )

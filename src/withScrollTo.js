@@ -19,16 +19,14 @@ export default function withScrollTo(Component) {
     static propTypes = {
       axis: PropTypes.oneOf([Axis.X, Axis.Y]),
       initialPage: PropTypes.number,
-      pageHeight: PropTypes.number,
-      pageWidth: PropTypes.number,
+      pageSize: PropTypes.number,
       scrollDuration: PropTypes.number,
     }
 
     static defaultProps = {
       axis: Axis.Y,
       initialPage: 0,
-      pageHeight: 0,
-      pageWidth: 0,
+      pageSize: 0,
       scrollDuration: 0,
     }
 
@@ -43,32 +41,23 @@ export default function withScrollTo(Component) {
 
     @autobind
     handleMount($el) {
-      const { axis, pageHeight, pageWidth } = this.props
+      const { axis, pageSize } = this.props
       const { page } = this.state
 
-      scrollElementTo(
-        $el,
-        axis,
-        page * (axis === Axis.X ? pageWidth : pageHeight),
-        0
-      )
+      scrollElementTo($el, axis, page * pageSize, 0)
     }
 
     @autobind
     handlePaginate(page, $el) {
-      const { axis, pageHeight, pageWidth, scrollDuration } = this.props
+      const { axis, pageSize, scrollDuration } = this.props
 
       this.setState({
         isScrolling: true,
         page,
       })
 
-      scrollElementTo(
-        $el,
-        axis,
-        page * (axis === Axis.X ? pageWidth : pageHeight),
-        scrollDuration,
-        () => this.setState({ isScrolling: false })
+      scrollElementTo($el, axis, page * pageSize, scrollDuration, () =>
+        this.setState({ isScrolling: false })
       )
     }
 

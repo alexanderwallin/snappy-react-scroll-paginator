@@ -55,7 +55,7 @@ class App extends PureComponent {
           axis={SnappyScrollPaginator.Axis.Y}
           page={page}
           numPages={pages.length}
-          pageHeight={200}
+          pageSize={200}
           velocityThreshold={50}
           style={{
             height: 200,
@@ -73,7 +73,7 @@ class App extends PureComponent {
           axis={SnappyScrollPaginator.Axis.Y}
           initialPage={2}
           numPages={pages.length}
-          pageHeight={200}
+          pageSize={200}
           velocityThreshold={30}
           scrollDuration={500}
           style={{
