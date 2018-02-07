@@ -14,6 +14,8 @@ let onPaginateX
 let onPaginateY
 let children
 
+let stopPropagation
+
 test.beforeEach(() => {
   onPaginateX = td.function('onPaginateX')
   onPaginateY = td.function('onPaginateY')
@@ -44,6 +46,8 @@ test.beforeEach(() => {
       {children}
     </SnappyScrollPaginator>
   )
+
+  stopPropagation = td.function('stopPropagation')
 })
 
 test('renders its children', t => {
@@ -61,22 +65,27 @@ test('updates scroll position when page prop changes', t => {
   t.is(paginatorY.instance().$el.scrollTop, 100)
 })
 
+test('stops wheel event propagation', t => {
+  paginatorX.instance().handleWheel({ deltaX: 0, stopPropagation })
+  t.notThrows(() => td.verify(stopPropagation()))
+})
+
 test('calls onPaginate prop with new page number when scroll velocity threshold is reached', t => {
-  paginatorY.instance().handleWheel({ deltaY: 0 })
+  paginatorY.instance().handleWheel({ deltaY: 0, stopPropagation })
   t.throws(() => td.verify(onPaginateY(td.matchers.anything())))
 
-  paginatorY.instance().handleWheel({ deltaY: 10 })
+  paginatorY.instance().handleWheel({ deltaY: 10, stopPropagation })
   t.notThrows(() => td.verify(onPaginateY(2)))
 
-  paginatorY.instance().handleWheel({ deltaY: -10 })
+  paginatorY.instance().handleWheel({ deltaY: -10, stopPropagation })
   t.notThrows(() => td.verify(onPaginateY(0)))
 })
 
 test('does not paginate outside range', t => {
-  paginatorY.instance().handleWheel({ deltaY: -10 })
+  paginatorY.instance().handleWheel({ deltaY: -10, stopPropagation })
   t.throws(() => td.verify(onPaginateY(-1)))
 
   paginatorY.setProps({ page: 2 })
-  paginatorY.instance().handleWheel({ deltaY: 10 })
+  paginatorY.instance().handleWheel({ deltaY: 10, stopPropagation })
   t.throws(() => td.verify(onPaginateY(3)))
 })

@@ -44,6 +44,8 @@ class SnappyScrollPaginator extends PureComponent {
   handleWheel(evt) {
     const { axis, numPages, onPaginate, page, velocityThreshold } = this.props
 
+    evt.stopPropagation()
+
     const d = axis === Axis.X ? evt.deltaX : evt.deltaY
     if (Math.abs(d) >= velocityThreshold) {
       if (d < 0 && page !== 0) {
