@@ -2,18 +2,10 @@
 /* global window */
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import scroll from 'scroll'
 import { autobind } from 'core-decorators'
 
+import animatedScrollTo from './animatedScrollTo.js'
 import { Axis } from './constants.js'
-
-function scrollElementTo($el, axis, offset, duration, cb = () => {}) {
-  if (axis === Axis.X) {
-    scroll.left($el, offset, duration, cb)
-  } else if (axis === Axis.Y) {
-    scroll.top($el, offset, duration, cb)
-  }
-}
 
 export default function withScrollTo(Component) {
   return class ComponentWithScrollTo extends PureComponent {
@@ -47,7 +39,7 @@ export default function withScrollTo(Component) {
       const { axis, pageSize } = this.props
       const { page } = this.state
 
-      scrollElementTo($el, axis, page * pageSize, 0)
+      animatedScrollTo($el, axis, page * pageSize, 1)
     }
 
     @autobind
@@ -59,7 +51,7 @@ export default function withScrollTo(Component) {
         page,
       })
 
-      scrollElementTo($el, axis, page * pageSize, scrollDuration, () => {
+      animatedScrollTo($el, axis, page * pageSize, scrollDuration, () => {
         window.setTimeout(() => {
           this.setState({ isScrolling: false })
         }, scrollPause)

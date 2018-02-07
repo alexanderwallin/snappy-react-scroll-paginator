@@ -58,7 +58,9 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
   )
   compX.find(ClickToPaginate).simulate('click')
   t.notThrows(() =>
-    td.verify(scroll.left($el, 100, 10, td.matchers.isA(Function)))
+    td.verify(
+      scroll.left($el, 100, { duration: 10 }, td.matchers.isA(Function))
+    )
   )
 
   const compY = mount(
@@ -71,7 +73,7 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
   )
   compY.find(ClickToPaginate).simulate('click')
   t.notThrows(() =>
-    td.verify(scroll.top($el, 100, 10, td.matchers.isA(Function)))
+    td.verify(scroll.top($el, 100, { duration: 10 }, td.matchers.isA(Function)))
   )
 })
 
@@ -87,11 +89,11 @@ test(`pauses pagination for as long as the scrollPause prop defines`, t => {
       scrollTop(
         td.matchers.anything(),
         td.matchers.isA(Number),
-        td.matchers.isA(Number),
+        td.matchers.isA(Object),
         td.matchers.isA(Function)
       )
     )
-    .thenDo(($elem, offset, duration, cb) => {
+    .thenDo(($elem, offset, options, cb) => {
       cb()
     })
 
