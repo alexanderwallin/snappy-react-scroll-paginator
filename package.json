@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Your good pal in composing snappy, scroll-based pagination components in React",
   "main": "dist/index.js",
+  "scripts": {
+    "build": "babel --out-dir dist src",
+    "postbuild": "cpy dist/animatedScrollTo.js ./",
+    "lint": "eslint src/**/*.js",
+    "test": "ava --files tests/**/*.test.js --verbose"
+  },
   "dependencies": {
     "core-decorators": "^0.20.0"
   },
@@ -19,6 +25,7 @@
     "babel-preset-env": "^7.0.0-beta.3",
     "babel-preset-react": "^7.0.0-beta.3",
     "browser-env": "^3.2.5",
+    "cpy-cli": "^1.0.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.17.0",
@@ -43,11 +50,6 @@
   },
   "optionalDependencies": {
     "scroll": "^2.0.1"
-  },
-  "scripts": {
-    "build": "babel --out-dir dist src",
-    "lint": "eslint src/**/*.js",
-    "test": "ava --files tests/**/*.test.js --verbose"
   },
   "keywords": [
     "react",
