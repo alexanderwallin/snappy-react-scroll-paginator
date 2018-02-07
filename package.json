@@ -16,6 +16,7 @@
     "babel-polyfill": "^7.0.0-beta.3",
     "babel-preset-env": "^7.0.0-beta.3",
     "babel-preset-react": "^7.0.0-beta.3",
+    "browser-env": "^3.2.5",
     "core-decorators": "^0.20.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
@@ -28,6 +29,7 @@
     "eslint-plugin-react": "^7.6.1",
     "prettier": "^1.10.2",
     "prop-types": "^15.6.0",
+    "raf": "^3.4.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-test-renderer": "^16.2.0"
@@ -39,14 +41,16 @@
   "scripts": {
     "build": "babel --out-dir dist src",
     "lint": "eslint src/**/*.js",
-    "test": "ava --files tests/**/*.js --verbose"
+    "test": "ava --files tests/*.test.js --verbose"
   },
   "keywords": [],
   "author": "Alexander Wallin <office@alexanderwallin.com> (http://alexanderwallin.com)",
   "license": "ISC",
   "ava": {
     "require": [
-      "@babel/register"
+      "@babel/register",
+      "raf/polyfill",
+      "./tests/helpers/setup-browser-env.js"
     ]
   }
 }
