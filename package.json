@@ -44,7 +44,7 @@
   "scripts": {
     "build": "babel --out-dir dist src",
     "lint": "eslint src/**/*.js",
-    "test": "ava --files tests/*.test.js --verbose"
+    "test": "ava --files tests/**/*.test.js --verbose"
   },
   "keywords": [],
   "author": "Alexander Wallin <office@alexanderwallin.com> (http://alexanderwallin.com)",
