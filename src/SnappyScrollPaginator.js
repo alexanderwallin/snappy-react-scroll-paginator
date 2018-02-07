@@ -13,6 +13,7 @@ class SnappyScrollPaginator extends PureComponent {
   static propTypes = {
     axis: PropTypes.oneOf([Axis.X, Axis.Y]),
     children: PropTypes.node.isRequired,
+    className: PropTypes.string,
     isEnabled: PropTypes.bool,
     mayPaginate: PropTypes.bool,
     numPages: PropTypes.number.isRequired,
@@ -26,6 +27,7 @@ class SnappyScrollPaginator extends PureComponent {
 
   static defaultProps = {
     axis: Axis.Y,
+    className: '',
     isEnabled: true,
     mayPaginate: true,
     onMount: () => {},
@@ -99,11 +101,12 @@ class SnappyScrollPaginator extends PureComponent {
   }
 
   render() {
-    const { children, style } = this.props
+    const { children, className, style } = this.props
 
     return (
       <div
         ref={this.handleRef}
+        className={className}
         style={style}
         onScroll={this.handleScroll}
         onWheel={this.handleWheel}

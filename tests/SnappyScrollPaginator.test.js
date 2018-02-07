@@ -9,6 +9,7 @@ import SnappyScrollPaginator from '../src/SnappyScrollPaginator.js'
 
 Enzyme.configure({ adapter: new Adapter() })
 
+const className = 'className'
 const style = {
   backgroundColor: 'red',
 }
@@ -38,6 +39,7 @@ test.beforeEach(() => {
       axis={Axis.X}
       page={1}
       numPages={3}
+      className={className}
       style={style}
       velocityThreshold={10}
       scrollWobbleThreshold={5}
@@ -55,6 +57,7 @@ test.beforeEach(() => {
       axis={Axis.Y}
       page={1}
       numPages={3}
+      className={className}
       style={style}
       velocityThreshold={10}
       scrollWobbleThreshold={5}
@@ -77,6 +80,11 @@ test('renders its children', t => {
 test('calls onMount() prop after storing its element reference', t => {
   t.notThrows(() => td.verify(onMountX(td.matchers.anything())))
   t.notThrows(() => td.verify(onMountY(td.matchers.anything())))
+})
+
+test('pass on the className prop to the root element', t => {
+  t.is(paginatorX.props().className, className)
+  t.is(paginatorY.props().className, className)
 })
 
 test('passes on the style prop to the root element', t => {

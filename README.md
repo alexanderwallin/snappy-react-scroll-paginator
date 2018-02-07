@@ -77,6 +77,7 @@ It is stupid in the sense that **it doesn't keep any state on what page it is on
 
 * `axis` - Which axis to paginate along
 * `children` - Child nodes
+* `className` - A class name that will be set on the root element
 * `isEnabled` - Whether the paginator is enabled or not. If set to `false`, no scroll or wheel events will be touched.
 * `mayPaginate` - Whether pagination should take place. This will not affect event cancellation, which means you can capture scrolling behaviour while pausing actual pagination.
 * `numPages` - How many pages are in the paginator
