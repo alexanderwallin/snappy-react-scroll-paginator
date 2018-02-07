@@ -7,7 +7,6 @@ import td from 'testdouble'
 import React from 'react'
 import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-import scroll from 'scroll'
 
 import { Axis } from '../src/constants.js'
 import withScrollTo from '../src/withScrollTo.js'
@@ -37,11 +36,9 @@ test(`updates page state when onPaginate is called`, t => {
   t.is(comp.state().page, 2)
 })
 
-test(`scrolls the element passed to onPaginate() using the scroll library`, t => {
+test(`scrolls the element passed to onPaginate() using the provided scrollTo prop function`, t => {
   const $el = {}
-
-  td.replace(scroll, 'left')
-  td.replace(scroll, 'top')
+  const scrollTo = td.function('scrollTo')
 
   const ClickToPaginate = ({ onPaginate }) => (
     <div onClick={() => onPaginate(1, $el)} />
@@ -54,13 +51,12 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
       initialPage={0}
       pageSize={100}
       scrollDuration={10}
+      scrollTo={scrollTo}
     />
   )
   compX.find(ClickToPaginate).simulate('click')
   t.notThrows(() =>
-    td.verify(
-      scroll.left($el, 100, { duration: 10 }, td.matchers.isA(Function))
-    )
+    td.verify(scrollTo($el, Axis.X, 100, 10, td.matchers.isA(Function)))
   )
 
   const compY = mount(
@@ -69,31 +65,33 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
       initialPage={0}
       pageSize={100}
       scrollDuration={10}
+      scrollTo={scrollTo}
     />
   )
   compY.find(ClickToPaginate).simulate('click')
   t.notThrows(() =>
-    td.verify(scroll.top($el, 100, { duration: 10 }, td.matchers.isA(Function)))
+    td.verify(scrollTo($el, Axis.Y, 100, 10, td.matchers.isA(Function)))
   )
 })
 
 test(`pauses pagination for as long as the scrollPause prop defines`, t => {
   const $el = {}
-  const scrollTop = td.replace(scroll, 'top')
+  const scrollTo = td.function('scrollTo')
   const windowSetTimeout = td.replace(window, 'setTimeout')
   let timeoutFn
 
   // Stub scroll.top to simply invoke the callback
   td
     .when(
-      scrollTop(
+      scrollTo(
         td.matchers.anything(),
+        td.matchers.isA(String),
         td.matchers.isA(Number),
-        td.matchers.isA(Object),
+        td.matchers.isA(Number),
         td.matchers.isA(Function)
       )
     )
-    .thenDo(($elem, offset, options, cb) => {
+    .thenDo(($elem, axis, offset, duration, cb) => {
       cb()
     })
 
@@ -116,6 +114,7 @@ test(`pauses pagination for as long as the scrollPause prop defines`, t => {
       initialPage={0}
       pageSize={100}
       scrollPause={50}
+      scrollTo={scrollTo}
     />
   )
   comp.find(ClickToPaginate).simulate('click')

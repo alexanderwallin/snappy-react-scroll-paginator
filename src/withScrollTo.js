@@ -4,7 +4,6 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { autobind } from 'core-decorators'
 
-import animatedScrollTo from './animatedScrollTo.js'
 import { Axis } from './constants.js'
 
 export default function withScrollTo(Component) {
@@ -15,6 +14,7 @@ export default function withScrollTo(Component) {
       pageSize: PropTypes.number,
       scrollDuration: PropTypes.number,
       scrollPause: PropTypes.number,
+      scrollTo: PropTypes.func,
     }
 
     static defaultProps = {
@@ -23,6 +23,7 @@ export default function withScrollTo(Component) {
       pageSize: 0,
       scrollDuration: 0,
       scrollPause: 0,
+      scrollTo: () => {},
     }
 
     constructor(props) {
@@ -36,22 +37,28 @@ export default function withScrollTo(Component) {
 
     @autobind
     handleMount($el) {
-      const { axis, pageSize } = this.props
+      const { axis, pageSize, scrollTo } = this.props
       const { page } = this.state
 
-      animatedScrollTo($el, axis, page * pageSize, 1)
+      scrollTo($el, axis, page * pageSize, 1)
     }
 
     @autobind
     handlePaginate(page, $el) {
-      const { axis, pageSize, scrollDuration, scrollPause } = this.props
+      const {
+        axis,
+        pageSize,
+        scrollDuration,
+        scrollPause,
+        scrollTo,
+      } = this.props
 
       this.setState({
         isScrolling: true,
         page,
       })
 
-      animatedScrollTo($el, axis, page * pageSize, scrollDuration, () => {
+      scrollTo($el, axis, page * pageSize, scrollDuration, () => {
         window.setTimeout(() => {
           this.setState({ isScrolling: false })
         }, scrollPause)
@@ -59,7 +66,7 @@ export default function withScrollTo(Component) {
     }
 
     render() {
-      const { initialPage, scrollDuration, ...props } = this.props
+      const { initialPage, scrollDuration, scrollTo, ...props } = this.props
       const { isScrolling, page } = this.state
 
       return (

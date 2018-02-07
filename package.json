@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "core-decorators": "^0.20.0",
-    "scroll": "^2.0.1"
+    "core-decorators": "^0.20.0"
   },
   "devDependencies": {
     "@babel/register": "^7.0.0-beta.39",
@@ -35,11 +34,15 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-test-renderer": "^16.2.0",
+    "scroll": "^2.0.1",
     "testdouble": "^3.3.3"
   },
   "peerDependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.0.0"
+  },
+  "optionalDependencies": {
+    "scroll": "^2.0.1"
   },
   "scripts": {
     "build": "babel --out-dir dist src",

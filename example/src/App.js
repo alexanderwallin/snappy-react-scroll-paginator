@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { autobind } from 'core-decorators'
 
+import animatedScrollTo from '../../src/animatedScrollTo.js'
 import SnappyScrollPaginator from '../../src/SnappyScrollPaginator.js'
 import withScrollTo from '../../src/withScrollTo.js'
 
@@ -77,6 +78,7 @@ class App extends PureComponent {
           velocityThreshold={30}
           scrollDuration={500}
           scrollPause={500}
+          scrollTo={animatedScrollTo}
           style={{
             height: 200,
             overflow: 'hidden',
@@ -96,6 +98,7 @@ class App extends PureComponent {
           velocityThreshold={50}
           scrollDuration={800}
           scrollPause={500}
+          scrollTo={animatedScrollTo}
           style={{
             width: 200,
             height: 200,
