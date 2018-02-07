@@ -16,9 +16,11 @@ class SnappyScrollPaginator extends PureComponent {
   static propTypes = {
     axis: PropTypes.oneOf([Axis.X, Axis.Y]),
     numPages: PropTypes.number.isRequired,
+    onPaginate: PropTypes.func.isRequired,
     page: PropTypes.number,
     pageHeight: PropTypes.number,
     pageWidth: PropTypes.number,
+    velocityThreshold: PropTypes.number,
   }
 
   static defaultProps = {
@@ -26,6 +28,7 @@ class SnappyScrollPaginator extends PureComponent {
     page: 0,
     pageHeight: 0,
     pageWidth: 0,
+    velocityThreshold: 51,
   }
 
   $el = null
@@ -34,6 +37,20 @@ class SnappyScrollPaginator extends PureComponent {
   handleRef($el) {
     this.$el = $el
     this.updateScrollPosition()
+  }
+
+  @autobind
+  handleWheel(evt) {
+    const { axis, numPages, onPaginate, page, velocityThreshold } = this.props
+
+    const d = axis === Axis.X ? evt.deltaX : evt.deltaY
+    if (Math.abs(d) >= velocityThreshold) {
+      if (d < 0 && page !== 0) {
+        onPaginate(page - 1)
+      } else if (d > 0 && page < numPages - 1) {
+        onPaginate(page + 1)
+      }
+    }
   }
 
   updateScrollPosition() {
@@ -46,10 +63,22 @@ class SnappyScrollPaginator extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { page } = this.props
+
+    if (page !== prevProps.page) {
+      this.updateScrollPosition()
+    }
+  }
+
   render() {
     const { page } = this.props
 
-    return <div ref={this.handleRef}>{page}</div>
+    return (
+      <div ref={this.handleRef} onWheel={this.handleWheel}>
+        {page}
+      </div>
+    )
   }
 }
 
