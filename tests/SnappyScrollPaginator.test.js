@@ -33,6 +33,7 @@ test.beforeEach(() => {
 
   paginatorX = mount(
     <SnappyScrollPaginator
+      isEnabled
       axis={Axis.X}
       page={1}
       numPages={3}
@@ -48,6 +49,7 @@ test.beforeEach(() => {
 
   paginatorY = mount(
     <SnappyScrollPaginator
+      isEnabled
       axis={Axis.Y}
       page={1}
       numPages={3}
@@ -80,16 +82,46 @@ test('passes on the style prop to the root element', t => {
   t.is(paginatorY.props().style, style)
 })
 
-test('stops scroll event propagation', t => {
-  paginatorX.simulate('scroll', { preventDefault, stopPropagation })
-  t.notThrows(() => td.verify(preventDefault()))
-  t.notThrows(() => td.verify(stopPropagation()))
+test('stops scroll event propagation when enabled', t => {
+  const pD1 = td.function()
+  const sP1 = td.function()
+
+  paginatorX.simulate('scroll', { preventDefault: pD1, stopPropagation: sP1 })
+  t.notThrows(() => td.verify(pD1()))
+  t.notThrows(() => td.verify(sP1()))
+
+  const pD2 = td.function()
+  const sP2 = td.function()
+
+  paginatorX.setProps({ isEnabled: false })
+  paginatorX.simulate('scroll', { preventDefault: pD2, stopPropagation: sP2 })
+  t.throws(() => td.verify(pD2()))
+  t.throws(() => td.verify(sP2()))
 })
 
-test('stops wheel event propagation', t => {
-  paginatorX.simulate('wheel', { preventDefault, stopPropagation })
-  t.notThrows(() => td.verify(preventDefault()))
-  t.notThrows(() => td.verify(stopPropagation()))
+test('stops wheel event propagation when enabled', t => {
+  const pD1 = td.function()
+  const sP1 = td.function()
+
+  paginatorX.simulate('wheel', { preventDefault: pD1, stopPropagation: sP1 })
+  t.notThrows(() => td.verify(pD1()))
+  t.notThrows(() => td.verify(sP1()))
+
+  const pD2 = td.function()
+  const sP2 = td.function()
+
+  paginatorX.setProps({ isEnabled: false })
+  paginatorX.simulate('wheel', { preventDefault: pD2, stopPropagation: sP2 })
+  t.throws(() => td.verify(pD2()))
+  t.throws(() => td.verify(sP2()))
+})
+
+test('does not call onPaginate() when isEnabled is false', t => {
+  paginatorX.setProps({ isEnabled: false })
+  paginatorX.simulate('wheel', { deltaX: 100, preventDefault, stopPropagation })
+  t.throws(() =>
+    td.verify(onPaginateX(td.matchers.isA(Number), td.matchers.anything()))
+  )
 })
 
 test('calls onPaginate prop when scroll velocity threshold is reached', t => {

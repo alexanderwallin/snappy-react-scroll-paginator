@@ -4,11 +4,6 @@ import { autobind } from 'core-decorators'
 
 import { Axis } from './constants.js'
 
-const cancelEvent = evt => {
-  evt.preventDefault()
-  evt.stopPropagation()
-}
-
 /**
  * Snappy Scroll Paginator
  */
@@ -18,6 +13,7 @@ class SnappyScrollPaginator extends PureComponent {
   static propTypes = {
     axis: PropTypes.oneOf([Axis.X, Axis.Y]),
     children: PropTypes.node.isRequired,
+    isEnabled: PropTypes.bool,
     numPages: PropTypes.number.isRequired,
     onMount: PropTypes.func,
     onPaginate: PropTypes.func.isRequired,
@@ -28,6 +24,7 @@ class SnappyScrollPaginator extends PureComponent {
 
   static defaultProps = {
     axis: Axis.Y,
+    isEnabled: true,
     onMount: () => {},
     page: 0,
     style: {},
@@ -45,8 +42,31 @@ class SnappyScrollPaginator extends PureComponent {
   }
 
   @autobind
+  handleScroll(evt) {
+    const { isEnabled } = this.props
+
+    if (isEnabled === false) {
+      return
+    }
+
+    evt.preventDefault()
+    evt.stopPropagation()
+  }
+
+  @autobind
   handleWheel(evt) {
-    const { axis, numPages, onPaginate, page, velocityThreshold } = this.props
+    const {
+      axis,
+      isEnabled,
+      numPages,
+      onPaginate,
+      page,
+      velocityThreshold,
+    } = this.props
+
+    if (isEnabled === false) {
+      return
+    }
 
     evt.preventDefault()
     evt.stopPropagation()
@@ -68,7 +88,7 @@ class SnappyScrollPaginator extends PureComponent {
       <div
         ref={this.handleRef}
         style={style}
-        onScroll={cancelEvent}
+        onScroll={this.handleScroll}
         onWheel={this.handleWheel}
       >
         {children}
