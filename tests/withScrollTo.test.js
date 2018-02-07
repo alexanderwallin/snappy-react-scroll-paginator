@@ -95,6 +95,8 @@ test(`pauses pagination for as long as the scrollPause prop defines`, t => {
       cb()
     })
 
+  // Store a reference to the function that triggers the state change,
+  // so that we can call it later to very the update
   td
     .when(windowSetTimeout(td.matchers.isA(Function), td.matchers.isA(Number)))
     .thenDo(fn => {
