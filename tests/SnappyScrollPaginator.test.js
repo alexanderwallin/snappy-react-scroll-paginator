@@ -8,78 +8,75 @@ import SnappyScrollPaginator from '../src/SnappyScrollPaginator.js'
 
 Enzyme.configure({ adapter: new Adapter() })
 
-test('has correct initial scroll position', t => {
-  const paginator1 = mount(
+let paginatorX
+let paginatorY
+let onPaginateX
+let onPaginateY
+let children
+
+test.beforeEach(() => {
+  onPaginateX = td.function('onPaginateX')
+  onPaginateY = td.function('onPaginateY')
+  children = <div>Children</div>
+
+  paginatorX = mount(
+    <SnappyScrollPaginator
+      axis={SnappyScrollPaginator.Axis.X}
+      page={1}
+      numPages={3}
+      pageWidth={100}
+      velocityThreshold={10}
+      onPaginate={onPaginateX}
+    >
+      {children}
+    </SnappyScrollPaginator>
+  )
+
+  paginatorY = mount(
     <SnappyScrollPaginator
       axis={SnappyScrollPaginator.Axis.Y}
       page={1}
       numPages={3}
       pageHeight={100}
-    />
+      velocityThreshold={10}
+      onPaginate={onPaginateY}
+    >
+      {children}
+    </SnappyScrollPaginator>
   )
-  t.is(paginator1.instance().$el.scrollTop, 100)
+})
 
-  const paginator2 = mount(
-    <SnappyScrollPaginator
-      axis={SnappyScrollPaginator.Axis.X}
-      page={2}
-      numPages={3}
-      pageWidth={200}
-    />
-  )
-  t.is(paginator2.instance().$el.scrollLeft, 400)
+test('renders its children', t => {
+  t.is(paginatorX.props().children, children)
+  t.is(paginatorY.props().children, children)
+})
+
+test('has correct initial scroll position', t => {
+  t.is(paginatorX.instance().$el.scrollLeft, 100)
+  t.is(paginatorY.instance().$el.scrollTop, 100)
 })
 
 test('updates scroll position when page prop changes', t => {
-  const paginator = mount(
-    <SnappyScrollPaginator
-      axis={SnappyScrollPaginator.Axis.Y}
-      page={0}
-      numPages={3}
-      pageHeight={100}
-    />
-  )
-  paginator.setProps({ page: 1 })
-  t.is(paginator.instance().$el.scrollTop, 100)
+  paginatorY.setProps({ page: 1 })
+  t.is(paginatorY.instance().$el.scrollTop, 100)
 })
 
 test('calls onPaginate prop with new page number when scroll velocity threshold is reached', t => {
-  const onPaginate = td.function('onPaginate')
-  const paginator = mount(
-    <SnappyScrollPaginator
-      axis={SnappyScrollPaginator.Axis.Y}
-      page={1}
-      numPages={3}
-      velocityThreshold={10}
-      onPaginate={onPaginate}
-    />
-  )
+  paginatorY.instance().handleWheel({ deltaY: 0 })
+  t.throws(() => td.verify(onPaginateY(td.matchers.anything())))
 
-  paginator.instance().handleWheel({ deltaY: 0 })
-  t.throws(() => td.verify(onPaginate(td.matchers.anything())))
+  paginatorY.instance().handleWheel({ deltaY: 10 })
+  t.notThrows(() => td.verify(onPaginateY(2)))
 
-  paginator.instance().handleWheel({ deltaY: 10 })
-  t.notThrows(() => td.verify(onPaginate(2)))
-
-  paginator.instance().handleWheel({ deltaY: -10 })
-  t.notThrows(() => td.verify(onPaginate(0)))
+  paginatorY.instance().handleWheel({ deltaY: -10 })
+  t.notThrows(() => td.verify(onPaginateY(0)))
 })
 
 test('does not paginate outside range', t => {
-  const onPaginate = td.function('onPaginate')
-  const paginator = mount(
-    <SnappyScrollPaginator
-      axis={SnappyScrollPaginator.Axis.Y}
-      page={0}
-      numPages={1}
-      velocityThreshold={10}
-      onPaginate={onPaginate}
-    />
-  )
+  paginatorY.instance().handleWheel({ deltaY: -10 })
+  t.throws(() => td.verify(onPaginateY(-1)))
 
-  paginator.instance().handleWheel({ deltaY: 10 })
-  t.throws(() => td.verify(onPaginate(1)))
-
-  paginator.instance().handleWheel({ deltaY: -10 })
-  t.throws(() => td.verify(onPaginate(-1)))
+  paginatorY.setProps({ page: 2 })
+  paginatorY.instance().handleWheel({ deltaY: 10 })
+  t.throws(() => td.verify(onPaginateY(3)))
 })
