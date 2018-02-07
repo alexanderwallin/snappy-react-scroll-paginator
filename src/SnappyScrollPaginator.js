@@ -7,6 +7,11 @@ const Axis = {
   Y: 'Y',
 }
 
+const cancelEvent = evt => {
+  evt.preventDefault()
+  evt.stopPropagation()
+}
+
 /**
  * Snappy Scroll Paginator
  */
@@ -21,6 +26,7 @@ class SnappyScrollPaginator extends PureComponent {
     page: PropTypes.number,
     pageHeight: PropTypes.number,
     pageWidth: PropTypes.number,
+    style: PropTypes.shape({}),
     velocityThreshold: PropTypes.number,
   }
 
@@ -29,6 +35,7 @@ class SnappyScrollPaginator extends PureComponent {
     page: 0,
     pageHeight: 0,
     pageWidth: 0,
+    style: {},
     velocityThreshold: 51,
   }
 
@@ -44,6 +51,7 @@ class SnappyScrollPaginator extends PureComponent {
   handleWheel(evt) {
     const { axis, numPages, onPaginate, page, velocityThreshold } = this.props
 
+    evt.preventDefault()
     evt.stopPropagation()
 
     const d = axis === Axis.X ? evt.deltaX : evt.deltaY
@@ -75,10 +83,15 @@ class SnappyScrollPaginator extends PureComponent {
   }
 
   render() {
-    const { children } = this.props
+    const { children, style } = this.props
 
     return (
-      <div ref={this.handleRef} onWheel={this.handleWheel}>
+      <div
+        ref={this.handleRef}
+        style={style}
+        onScroll={cancelEvent}
+        onWheel={this.handleWheel}
+      >
         {children}
       </div>
     )

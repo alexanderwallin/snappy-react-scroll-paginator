@@ -8,12 +8,17 @@ import SnappyScrollPaginator from '../src/SnappyScrollPaginator.js'
 
 Enzyme.configure({ adapter: new Adapter() })
 
+const style = {
+  backgroundColor: 'red',
+}
+
 let paginatorX
 let paginatorY
 let onPaginateX
 let onPaginateY
 let children
 
+let preventDefault
 let stopPropagation
 
 test.beforeEach(() => {
@@ -27,6 +32,7 @@ test.beforeEach(() => {
       page={1}
       numPages={3}
       pageWidth={100}
+      style={style}
       velocityThreshold={10}
       onPaginate={onPaginateX}
     >
@@ -40,6 +46,7 @@ test.beforeEach(() => {
       page={1}
       numPages={3}
       pageHeight={100}
+      style={style}
       velocityThreshold={10}
       onPaginate={onPaginateY}
     >
@@ -47,12 +54,18 @@ test.beforeEach(() => {
     </SnappyScrollPaginator>
   )
 
+  preventDefault = td.function('preventDefault')
   stopPropagation = td.function('stopPropagation')
 })
 
 test('renders its children', t => {
   t.is(paginatorX.props().children, children)
   t.is(paginatorY.props().children, children)
+})
+
+test('passes on the style prop to the root element', t => {
+  t.is(paginatorX.props().style, style)
+  t.is(paginatorY.props().style, style)
 })
 
 test('has correct initial scroll position', t => {
@@ -65,27 +78,44 @@ test('updates scroll position when page prop changes', t => {
   t.is(paginatorY.instance().$el.scrollTop, 100)
 })
 
+test('stops scroll event propagation', t => {
+  paginatorX.simulate('scroll', { preventDefault, stopPropagation })
+  t.notThrows(() => td.verify(preventDefault()))
+  t.notThrows(() => td.verify(stopPropagation()))
+})
+
 test('stops wheel event propagation', t => {
-  paginatorX.instance().handleWheel({ deltaX: 0, stopPropagation })
+  paginatorX.simulate('wheel', { preventDefault, stopPropagation })
+  t.notThrows(() => td.verify(preventDefault()))
   t.notThrows(() => td.verify(stopPropagation()))
 })
 
 test('calls onPaginate prop with new page number when scroll velocity threshold is reached', t => {
-  paginatorY.instance().handleWheel({ deltaY: 0, stopPropagation })
+  paginatorY
+    .instance()
+    .handleWheel({ deltaY: 0, preventDefault, stopPropagation })
   t.throws(() => td.verify(onPaginateY(td.matchers.anything())))
 
-  paginatorY.instance().handleWheel({ deltaY: 10, stopPropagation })
+  paginatorY
+    .instance()
+    .handleWheel({ deltaY: 10, preventDefault, stopPropagation })
   t.notThrows(() => td.verify(onPaginateY(2)))
 
-  paginatorY.instance().handleWheel({ deltaY: -10, stopPropagation })
+  paginatorY
+    .instance()
+    .handleWheel({ deltaY: -10, preventDefault, stopPropagation })
   t.notThrows(() => td.verify(onPaginateY(0)))
 })
 
 test('does not paginate outside range', t => {
-  paginatorY.instance().handleWheel({ deltaY: -10, stopPropagation })
+  paginatorY
+    .instance()
+    .handleWheel({ deltaY: -10, preventDefault, stopPropagation })
   t.throws(() => td.verify(onPaginateY(-1)))
 
   paginatorY.setProps({ page: 2 })
-  paginatorY.instance().handleWheel({ deltaY: 10, stopPropagation })
+  paginatorY
+    .instance()
+    .handleWheel({ deltaY: 10, preventDefault, stopPropagation })
   t.throws(() => td.verify(onPaginateY(3)))
 })
