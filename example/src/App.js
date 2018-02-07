@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { autobind } from 'core-decorators'
 
 import animatedScrollTo from '../../src/animatedScrollTo.js'
+import { Axis } from '../../src/constants.js'
 import SnappyScrollPaginator from '../../src/SnappyScrollPaginator.js'
 import withScrollTo from '../../src/withScrollTo.js'
 
@@ -15,6 +16,14 @@ const pages = [
 const colors = ['red', 'green', 'blue', 'pink']
 
 const ScrollingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
+
+function uglyScroll($el, axis, offset, duration, cb = () => {}) {
+  window.setTimeout(() => {
+    const prop = axis === Axis.X ? 'scrollLeft' : 'scrollTop'
+    $el[prop] = offset
+    cb()
+  }, 300)
+}
 
 /**
  * App
@@ -98,7 +107,7 @@ class App extends PureComponent {
           velocityThreshold={50}
           scrollDuration={800}
           scrollPause={500}
-          scrollTo={animatedScrollTo}
+          scrollTo={uglyScroll}
           style={{
             width: 200,
             height: 200,
