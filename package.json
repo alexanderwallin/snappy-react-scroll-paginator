@@ -2,7 +2,7 @@
   "name": "snappy-react-scroll-paginator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "dependencies": {
     "core-decorators": "^0.20.0"
   },
