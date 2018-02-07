@@ -1,4 +1,5 @@
 /* eslint no-param-reassign: 0 */
+/* global window */
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import scroll from 'scroll'
@@ -21,6 +22,7 @@ export default function withScrollTo(Component) {
       initialPage: PropTypes.number,
       pageSize: PropTypes.number,
       scrollDuration: PropTypes.number,
+      scrollPause: PropTypes.number,
     }
 
     static defaultProps = {
@@ -28,6 +30,7 @@ export default function withScrollTo(Component) {
       initialPage: 0,
       pageSize: 0,
       scrollDuration: 0,
+      scrollPause: 0,
     }
 
     constructor(props) {
@@ -49,16 +52,18 @@ export default function withScrollTo(Component) {
 
     @autobind
     handlePaginate(page, $el) {
-      const { axis, pageSize, scrollDuration } = this.props
+      const { axis, pageSize, scrollDuration, scrollPause } = this.props
 
       this.setState({
         isScrolling: true,
         page,
       })
 
-      scrollElementTo($el, axis, page * pageSize, scrollDuration, () =>
-        this.setState({ isScrolling: false })
-      )
+      scrollElementTo($el, axis, page * pageSize, scrollDuration, () => {
+        window.setTimeout(() => {
+          this.setState({ isScrolling: false })
+        }, scrollPause)
+      })
     }
 
     render() {

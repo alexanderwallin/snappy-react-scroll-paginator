@@ -1,6 +1,7 @@
 /* eslint react/prop-types: 0 */
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
 /* eslint jsx-a11y/no-static-element-interactions: 0 */
+/* global window */
 import test from 'ava'
 import td from 'testdouble'
 import React from 'react'
@@ -72,4 +73,51 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
   t.notThrows(() =>
     td.verify(scroll.top($el, 100, 10, td.matchers.isA(Function)))
   )
+})
+
+test(`pauses pagination for as long as the scrollPause prop defines`, t => {
+  const $el = {}
+  const scrollTop = td.replace(scroll, 'top')
+  const windowSetTimeout = td.replace(window, 'setTimeout')
+  let timeoutFn
+
+  // Stub scroll.top to simply invoke the callback
+  td
+    .when(
+      scrollTop(
+        td.matchers.anything(),
+        td.matchers.isA(Number),
+        td.matchers.isA(Number),
+        td.matchers.isA(Function)
+      )
+    )
+    .thenDo(($elem, offset, duration, cb) => {
+      cb()
+    })
+
+  td
+    .when(windowSetTimeout(td.matchers.isA(Function), td.matchers.isA(Number)))
+    .thenDo(fn => {
+      timeoutFn = fn
+    })
+
+  const ClickToPaginate = ({ onPaginate }) => (
+    <div onClick={() => onPaginate(1, $el)} />
+  )
+  const ScrollingChild = withScrollTo(ClickToPaginate)
+
+  const comp = mount(
+    <ScrollingChild
+      axis={Axis.Y}
+      initialPage={0}
+      pageSize={100}
+      scrollPause={50}
+    />
+  )
+  comp.find(ClickToPaginate).simulate('click')
+  t.notThrows(() => td.verify(windowSetTimeout(td.matchers.isA(Function), 50)))
+
+  t.is(comp.state().isScrolling, true)
+  timeoutFn()
+  t.is(comp.state().isScrolling, false)
 })
