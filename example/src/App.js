@@ -129,6 +129,51 @@ class App extends PureComponent {
             ))}
           </div>
         </ScrollingSnappyScrollPaginator>
+
+        <h2>Nested paginators</h2>
+        <ScrollingSnappyScrollPaginator
+          axis={SnappyScrollPaginator.Axis.X}
+          initialPage={0}
+          numPages={2}
+          pageSize={200}
+          velocityThreshold={50}
+          scrollDuration={300}
+          scrollPause={200}
+          scrollTo={animatedScrollTo}
+          style={{
+            width: 200,
+            height: 200,
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ display: 'flex', width: 400, height: '100%' }}>
+            <div
+              style={{ width: 200, height: '100%', backgroundColor: 'gray' }}
+            >
+              <p>I'm the first page</p>
+            </div>
+
+            <div style={{ width: 200, height: '100%' }}>
+              <ScrollingSnappyScrollPaginator
+                axis={SnappyScrollPaginator.Axis.Y}
+                initialPage={0}
+                numPages={pages.length}
+                pageSize={200}
+                velocityThreshold={50}
+                scrollDuration={300}
+                scrollPause={200}
+                scrollTo={animatedScrollTo}
+                style={{
+                  width: '100%',
+                  height: 200,
+                  overflow: 'hidden',
+                }}
+              >
+                {children}
+              </ScrollingSnappyScrollPaginator>
+            </div>
+          </div>
+        </ScrollingSnappyScrollPaginator>
       </div>
     )
   }
