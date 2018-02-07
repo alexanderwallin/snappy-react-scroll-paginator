@@ -6,6 +6,13 @@ Pagination works along a single given axis and snaps to a fixed interval offset,
 
 No effort has gone into making this work on mobile.
 
+## Table of contents
+
+* [Installation](#installation)
+* [Usage](#usage)
+* [API](#api)
+* [License](#license)
+
 ## Installation
 
 ```
@@ -46,6 +53,11 @@ const AnimatingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
 
 ## API
 
+* [`Axis`](#axis)
+* [`<SnappyScrollPaginator />`](snappyscrollpaginator-)
+* [`withScrollTo()`](#withscrolltocomponent-snappyscrollpaginator--component)
+* [`animatedScrollTo()`](#animatedscrolltoel-htmlelement-axis-axis-offset-number-duration-number-cb-funtion)
+
 ### `Axis`
 
 `Axis` is an enum object with `X` and `Y` properties:
@@ -59,7 +71,7 @@ Axis.Y // === 'Y'
 
 This component is both pretty smart and quite stupid. It is smart in the sense that it captures `wheel` events and invokes `onPaginate()` when the direction and velocity of the scroll meets certain criteria provided in the props.
 
-It is stupid in the sense that **it doesn't keep any state on what page it is on**. It is up to you to store this in a stateful/smart (higher-order) component. Now, before you run off in complete panic, we do provide the [`withScrollTo()`](#withscrollto) decorator that takes care of most of that stuff.
+It is stupid in the sense that **it doesn't keep any state on what page it is on**. It is up to you to store this in a stateful/smart (higher-order) component. Now, before you run off in complete panic, we do provide the [`withScrollTo()`](#withscrolltocomponent-snappyscrollpaginator--component) decorator that takes care of most of that stuff.
 
 #### Props
 
@@ -81,7 +93,7 @@ This little bugger turns `<SnappyScrollPaginator />` into an actual scrolling pa
 
 It returns a component that keeps track of the current page and orchestrates the actual scrolling.
 
-The default behavior - the default value of the `scrollTo` prop - is to do absolutely nothing. It is up to you to give it a function that handles the scrolling (animation), i.e. you can do **whatever you want here**. To account for us lazy folks, we provide a [`animatedScrollTo()`](#animatedscrollto) function that you can use to get an ease-in-out animation.
+The default behavior - the default value of the `scrollTo` prop - is to do absolutely nothing. It is up to you to give it a function that handles the scrolling (animation), i.e. you can do **whatever you want here**. To account for us lazy folks, we provide a [`animatedScrollTo()`](#animatedscrolltoel-htmlelement-axis-axis-offset-number-duration-number-cb-funtion) function that you can use to get an ease-in-out animation.
 
 #### Result component props
 
