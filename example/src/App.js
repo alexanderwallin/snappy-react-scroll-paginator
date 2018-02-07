@@ -24,6 +24,7 @@ class App extends PureComponent {
   handlePaginate(page, $el) {
     this.setState({ page })
 
+    // eslint-disable-next-line no-param-reassign
     $el.scrollTop = page * 200
   }
 
