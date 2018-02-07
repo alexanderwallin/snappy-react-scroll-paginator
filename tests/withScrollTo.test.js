@@ -2,9 +2,11 @@
 /* eslint jsx-a11y/click-events-have-key-events: 0 */
 /* eslint jsx-a11y/no-static-element-interactions: 0 */
 import test from 'ava'
+import td from 'testdouble'
 import React from 'react'
 import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
+import scroll from 'scroll'
 
 import { Axis } from '../src/constants.js'
 import withScrollTo from '../src/withScrollTo.js'
@@ -33,22 +35,36 @@ test(`updates page state when onPaginate is called`, t => {
   t.is(comp.state().page, 2)
 })
 
-test(`sets scrollLeft/scrollTop on the element passed to onPaginate()`, t => {
-  const $el = { scrollLeft: 0, scrollTop: 0 }
+test(`scrolls the element passed to onPaginate() using the scroll library`, t => {
+  const $el = {}
+
+  td.replace(scroll, 'left')
+  td.replace(scroll, 'top')
+
   const ClickToPaginate = ({ onPaginate }) => (
     <div onClick={() => onPaginate(1, $el)} />
   )
   const ScrollingChild = withScrollTo(ClickToPaginate)
 
   const compX = mount(
-    <ScrollingChild axis={Axis.X} initialPage={0} pageWidth={100} />
+    <ScrollingChild
+      axis={Axis.X}
+      initialPage={0}
+      pageWidth={100}
+      scrollDuration={10}
+    />
   )
   compX.find(ClickToPaginate).simulate('click')
-  t.is($el.scrollLeft, 100)
+  t.notThrows(() => td.verify(scroll.left($el, 100, 10)))
 
   const compY = mount(
-    <ScrollingChild axis={Axis.Y} initialPage={0} pageHeight={100} />
+    <ScrollingChild
+      axis={Axis.Y}
+      initialPage={0}
+      pageHeight={100}
+      scrollDuration={10}
+    />
   )
   compY.find(ClickToPaginate).simulate('click')
-  t.is($el.scrollTop, 100)
+  t.notThrows(() => td.verify(scroll.top($el, 100, 10)))
 })

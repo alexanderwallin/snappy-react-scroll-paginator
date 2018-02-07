@@ -75,6 +75,7 @@ class App extends PureComponent {
           numPages={pages.length}
           pageHeight={200}
           velocityThreshold={30}
+          scrollDuration={500}
           style={{
             height: 200,
             overflow: 'hidden',
