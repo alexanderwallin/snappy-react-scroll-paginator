@@ -32,9 +32,12 @@ class SnappyScrollPaginator extends PureComponent {
 
   @autobind
   handleRef($el) {
-    const { axis, page, pageHeight, pageWidth } = this.props
-
     this.$el = $el
+    this.updateScrollPosition()
+  }
+
+  updateScrollPosition() {
+    const { axis, page, pageHeight, pageWidth } = this.props
 
     if (axis === Axis.X) {
       this.$el.scrollLeft = page * pageWidth

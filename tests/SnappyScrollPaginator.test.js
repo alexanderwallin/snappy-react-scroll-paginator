@@ -29,4 +29,15 @@ test('has correct initial scroll position', t => {
   t.is(paginator2.instance().$el.scrollLeft, 400)
 })
 
-
+test('updates scroll position when page prop changes', t => {
+  const paginator = mount(
+    <SnappyScrollPaginator
+      axis={SnappyScrollPaginator.Axis.Y}
+      page={0}
+      numPages={3}
+      pageHeight={100}
+    />
+  )
+  paginator.setProps({ page: 1 })
+  t.is(paginator.instance().$el.scrollTop, 100)
+})
