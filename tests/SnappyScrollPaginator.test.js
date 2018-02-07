@@ -40,6 +40,7 @@ test.beforeEach(() => {
       numPages={3}
       style={style}
       velocityThreshold={10}
+      scrollWobbleThreshold={5}
       onMount={onMountX}
       onPaginate={onPaginateX}
     >
@@ -56,6 +57,7 @@ test.beforeEach(() => {
       numPages={3}
       style={style}
       velocityThreshold={10}
+      scrollWobbleThreshold={5}
       onMount={onMountY}
       onPaginate={onPaginateY}
     >
@@ -112,6 +114,30 @@ test('stops wheel event propagation when enabled', t => {
 
   paginatorX.setProps({ isEnabled: false })
   paginatorX.simulate('wheel', { preventDefault: pD2, stopPropagation: sP2 })
+  t.throws(() => td.verify(pD2()))
+  t.throws(() => td.verify(sP2()))
+})
+
+test('does not cancel events when scrolling in the wrong direction', t => {
+  const pD1 = td.function()
+  const sP1 = td.function()
+
+  paginatorX.simulate('wheel', {
+    deltaY: 10,
+    preventDefault: pD1,
+    stopPropagation: sP1,
+  })
+  t.throws(() => td.verify(pD1()))
+  t.throws(() => td.verify(sP1()))
+
+  const pD2 = td.function()
+  const sP2 = td.function()
+
+  paginatorY.simulate('wheel', {
+    deltaX: 10,
+    preventDefault: pD2,
+    stopPropagation: sP2,
+  })
   t.throws(() => td.verify(pD2()))
   t.throws(() => td.verify(sP2()))
 })

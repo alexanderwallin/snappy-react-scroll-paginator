@@ -19,6 +19,7 @@ class SnappyScrollPaginator extends PureComponent {
     onMount: PropTypes.func,
     onPaginate: PropTypes.func.isRequired,
     page: PropTypes.number,
+    scrollWobbleThreshold: PropTypes.number,
     style: PropTypes.shape({}),
     velocityThreshold: PropTypes.number,
   }
@@ -29,6 +30,7 @@ class SnappyScrollPaginator extends PureComponent {
     mayPaginate: true,
     onMount: () => {},
     page: 0,
+    scrollWobbleThreshold: 10,
     style: {},
     velocityThreshold: 51,
   }
@@ -64,10 +66,18 @@ class SnappyScrollPaginator extends PureComponent {
       numPages,
       onPaginate,
       page,
+      scrollWobbleThreshold,
       velocityThreshold,
     } = this.props
 
     if (isEnabled === false) {
+      return
+    }
+
+    if (
+      (axis === Axis.X && Math.abs(evt.deltaY) >= scrollWobbleThreshold) ||
+      (axis === Axis.Y && Math.abs(evt.deltaX) >= scrollWobbleThreshold)
+    ) {
       return
     }
 
