@@ -4,6 +4,7 @@ import React from 'react'
 import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
+import { Axis } from '../src/constants.js'
 import SnappyScrollPaginator from '../src/SnappyScrollPaginator.js'
 
 Enzyme.configure({ adapter: new Adapter() })
@@ -28,7 +29,7 @@ test.beforeEach(() => {
 
   paginatorX = mount(
     <SnappyScrollPaginator
-      axis={SnappyScrollPaginator.Axis.X}
+      axis={Axis.X}
       page={1}
       numPages={3}
       pageWidth={100}
@@ -42,7 +43,7 @@ test.beforeEach(() => {
 
   paginatorY = mount(
     <SnappyScrollPaginator
-      axis={SnappyScrollPaginator.Axis.Y}
+      axis={Axis.Y}
       page={1}
       numPages={3}
       pageHeight={100}

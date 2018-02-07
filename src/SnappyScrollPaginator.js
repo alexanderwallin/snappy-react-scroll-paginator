@@ -2,10 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { autobind } from 'core-decorators'
 
-const Axis = {
-  X: 'X',
-  Y: 'Y',
-}
+import { Axis } from './constants.js'
 
 const cancelEvent = evt => {
   evt.preventDefault()
