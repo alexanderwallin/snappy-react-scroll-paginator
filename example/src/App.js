@@ -5,10 +5,10 @@ import SnappyScrollPaginator from '../../src/SnappyScrollPaginator.js'
 import withScrollTo from '../../src/withScrollTo.js'
 
 const pages = [
+  { title: 'Page 0' },
   { title: 'Page 1' },
   { title: 'Page 2' },
   { title: 'Page 3' },
-  { title: 'Page 4' },
 ]
 
 const colors = ['red', 'green', 'blue', 'pink']
