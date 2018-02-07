@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "core-decorators": "^0.20.0"
+  },
   "devDependencies": {
     "@babel/register": "^7.0.0-beta.39",
     "ava": "^1.0.0-beta.1",
@@ -17,7 +19,6 @@
     "babel-preset-env": "^7.0.0-beta.3",
     "babel-preset-react": "^7.0.0-beta.3",
     "browser-env": "^3.2.5",
-    "core-decorators": "^0.20.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.17.0",
