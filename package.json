@@ -51,7 +51,7 @@
   },
   "keywords": [],
   "author": "Alexander Wallin <office@alexanderwallin.com> (http://alexanderwallin.com)",
-  "license": "ISC",
+  "license": "Unlicense",
   "ava": {
     "require": [
       "@babel/register",
