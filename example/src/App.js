@@ -84,6 +84,39 @@ class App extends PureComponent {
         >
           {children}
         </ScrollingSnappyScrollPaginator>
+
+        <h2>
+          <code>withScrollTo(SnappyScrollPaginator)</code> (x axis)
+        </h2>
+        <ScrollingSnappyScrollPaginator
+          axis={SnappyScrollPaginator.Axis.X}
+          initialPage={1}
+          numPages={pages.length}
+          pageSize={200}
+          velocityThreshold={50}
+          scrollDuration={800}
+          scrollPause={500}
+          style={{
+            width: 200,
+            height: 200,
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{ display: 'flex', width: 200 * pages.length }}>
+            {pages.map((p, i) => (
+              <div
+                key={p.title}
+                style={{
+                  width: 200,
+                  height: 200,
+                  backgroundColor: colors[i],
+                }}
+              >
+                {p.title}
+              </div>
+            ))}
+          </div>
+        </ScrollingSnappyScrollPaginator>
       </div>
     )
   }
