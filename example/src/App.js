@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { autobind } from 'core-decorators'
 
 import SnappyScrollPaginator from '../../src/SnappyScrollPaginator.js'
+import withScrollTo from '../../src/withScrollTo.js'
 
 const pages = [
   { title: 'Page 1' },
@@ -11,6 +12,8 @@ const pages = [
 ]
 
 const colors = ['red', 'green', 'blue', 'pink']
+
+const ScrollingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
 
 /**
  * App
@@ -31,8 +34,23 @@ class App extends PureComponent {
   render() {
     const { page } = this.state
 
+    const children = pages.map((p, i) => (
+      <div
+        key={p.title}
+        style={{
+          height: 200,
+          backgroundColor: colors[i],
+        }}
+      >
+        {p.title}
+      </div>
+    ))
+
     return (
       <div className="App">
+        <h2>
+          <code>SnappyScrollPaginator</code>
+        </h2>
         <SnappyScrollPaginator
           axis={SnappyScrollPaginator.Axis.Y}
           page={page}
@@ -45,18 +63,25 @@ class App extends PureComponent {
           }}
           onPaginate={this.handlePaginate}
         >
-          {pages.map((p, i) => (
-            <div
-              key={p.title}
-              style={{
-                height: 200,
-                backgroundColor: colors[i],
-              }}
-            >
-              {p.title}
-            </div>
-          ))}
+          {children}
         </SnappyScrollPaginator>
+
+        <h2>
+          <code>withScrollTo(SnappyScrollPaginator)</code>
+        </h2>
+        <ScrollingSnappyScrollPaginator
+          axis={SnappyScrollPaginator.Axis.Y}
+          initialPage={0}
+          numPages={pages.length}
+          pageHeight={200}
+          velocityThreshold={30}
+          style={{
+            height: 200,
+            overflow: 'hidden',
+          }}
+        >
+          {children}
+        </ScrollingSnappyScrollPaginator>
       </div>
     )
   }

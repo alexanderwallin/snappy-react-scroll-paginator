@@ -21,8 +21,6 @@ class SnappyScrollPaginator extends PureComponent {
     numPages: PropTypes.number.isRequired,
     onPaginate: PropTypes.func.isRequired,
     page: PropTypes.number,
-    pageHeight: PropTypes.number,
-    pageWidth: PropTypes.number,
     style: PropTypes.shape({}),
     velocityThreshold: PropTypes.number,
   }
@@ -30,8 +28,6 @@ class SnappyScrollPaginator extends PureComponent {
   static defaultProps = {
     axis: Axis.Y,
     page: 0,
-    pageHeight: 0,
-    pageWidth: 0,
     style: {},
     velocityThreshold: 51,
   }
