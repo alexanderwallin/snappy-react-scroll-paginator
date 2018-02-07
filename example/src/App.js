@@ -71,7 +71,7 @@ class App extends PureComponent {
         </h2>
         <ScrollingSnappyScrollPaginator
           axis={SnappyScrollPaginator.Axis.Y}
-          initialPage={0}
+          initialPage={2}
           numPages={pages.length}
           pageHeight={200}
           velocityThreshold={30}

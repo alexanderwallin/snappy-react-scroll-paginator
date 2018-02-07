@@ -1,7 +1,7 @@
 /* eslint react/prop-types: 0 */
-/* eslint jsx-a11y/click-events-have-key-events */
+/* eslint jsx-a11y/click-events-have-key-events: 0 */
+/* eslint jsx-a11y/no-static-element-interactions: 0 */
 import test from 'ava'
-import td from 'testdouble'
 import React from 'react'
 import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'

@@ -1,11 +1,23 @@
-import { compose, mapProps, withStateHandlers } from 'recompose'
+/* eslint no-param-reassign: 0 */
+import {
+  compose,
+  defaultProps,
+  mapProps,
+  setPropTypes,
+  withProps,
+  withStateHandlers,
+} from 'recompose'
+import PropTypes from 'prop-types'
 
 import { Axis } from './constants.js'
 
 export default function withScrollTo(Component) {
   return compose(
+    setPropTypes({
+      initialPage: PropTypes.number,
+    }),
     withStateHandlers(
-      ({ initialPage = 0 }) => ({
+      ({ initialPage }) => ({
         page: initialPage,
       }),
       {
@@ -20,6 +32,18 @@ export default function withScrollTo(Component) {
         },
       }
     ),
+    defaultProps({
+      initialPage: 0,
+    }),
+    withProps(({ axis, page, pageHeight, pageWidth }) => ({
+      onMount: $el => {
+        if (axis === Axis.X) {
+          $el.scrollLeft = page * pageWidth
+        } else if (axis === Axis.Y) {
+          $el.scrollTop = page * pageHeight
+        }
+      },
+    })),
     mapProps(({ initialPage, ...props }) => props)
   )(Component)
 }

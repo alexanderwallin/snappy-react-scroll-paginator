@@ -19,6 +19,7 @@ class SnappyScrollPaginator extends PureComponent {
     axis: PropTypes.oneOf([Axis.X, Axis.Y]),
     children: PropTypes.node.isRequired,
     numPages: PropTypes.number.isRequired,
+    onMount: PropTypes.func,
     onPaginate: PropTypes.func.isRequired,
     page: PropTypes.number,
     style: PropTypes.shape({}),
@@ -27,6 +28,7 @@ class SnappyScrollPaginator extends PureComponent {
 
   static defaultProps = {
     axis: Axis.Y,
+    onMount: () => {},
     page: 0,
     style: {},
     velocityThreshold: 51,
@@ -36,6 +38,9 @@ class SnappyScrollPaginator extends PureComponent {
 
   @autobind
   handleRef($el) {
+    const { onMount } = this.props
+
+    onMount($el)
     this.$el = $el
   }
 

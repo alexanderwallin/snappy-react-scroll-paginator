@@ -15,6 +15,8 @@ const style = {
 
 let paginatorX
 let paginatorY
+let onMountX
+let onMountY
 let onPaginateX
 let onPaginateY
 let children
@@ -23,6 +25,8 @@ let preventDefault
 let stopPropagation
 
 test.beforeEach(() => {
+  onMountX = td.function('onMountX')
+  onMountY = td.function('onMountY')
   onPaginateX = td.function('onPaginateX')
   onPaginateY = td.function('onPaginateY')
   children = <div>Children</div>
@@ -35,6 +39,7 @@ test.beforeEach(() => {
       pageWidth={100}
       style={style}
       velocityThreshold={10}
+      onMount={onMountX}
       onPaginate={onPaginateX}
     >
       {children}
@@ -49,6 +54,7 @@ test.beforeEach(() => {
       pageHeight={100}
       style={style}
       velocityThreshold={10}
+      onMount={onMountY}
       onPaginate={onPaginateY}
     >
       {children}
@@ -62,6 +68,11 @@ test.beforeEach(() => {
 test('renders its children', t => {
   t.is(paginatorX.props().children, children)
   t.is(paginatorY.props().children, children)
+})
+
+test('calls onMount() prop after storing its element reference', t => {
+  t.notThrows(() => td.verify(onMountX(td.matchers.anything())))
+  t.notThrows(() => td.verify(onMountY(td.matchers.anything())))
 })
 
 test('passes on the style prop to the root element', t => {
