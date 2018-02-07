@@ -7,7 +7,7 @@ import { autobind } from 'core-decorators'
 import { Axis } from './constants.js'
 
 export default function withScrollTo(Component) {
-  return class ComponentWithScrollTo extends PureComponent {
+  class ComponentWithScrollTo extends PureComponent {
     static propTypes = {
       axis: PropTypes.oneOf([Axis.X, Axis.Y]),
       initialPage: PropTypes.number,
@@ -80,4 +80,10 @@ export default function withScrollTo(Component) {
       )
     }
   }
+
+  const componentDisplayName =
+    Component.dispalyName || Component.name || 'Component'
+  ComponentWithScrollTo.displayName = `withScrollTo(${componentDisplayName})`
+
+  return ComponentWithScrollTo
 }
