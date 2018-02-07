@@ -24,8 +24,9 @@ test(`takes an initialPage prop that is stored in the wrapper's state and passed
 })
 
 test(`updates page state when onPaginate is called`, t => {
+  const $el = {}
   const ClickToPaginate = ({ onPaginate }) => (
-    <div onClick={() => onPaginate(2)} />
+    <div onClick={() => onPaginate(2, $el)} />
   )
   const ScrollingChild = withScrollTo(ClickToPaginate)
   const comp = mount(<ScrollingChild initialPage={1} />)
@@ -55,7 +56,9 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
     />
   )
   compX.find(ClickToPaginate).simulate('click')
-  t.notThrows(() => td.verify(scroll.left($el, 100, 10)))
+  t.notThrows(() =>
+    td.verify(scroll.left($el, 100, 10, td.matchers.isA(Function)))
+  )
 
   const compY = mount(
     <ScrollingChild
@@ -66,5 +69,7 @@ test(`scrolls the element passed to onPaginate() using the scroll library`, t =>
     />
   )
   compY.find(ClickToPaginate).simulate('click')
-  t.notThrows(() => td.verify(scroll.top($el, 100, 10)))
+  t.notThrows(() =>
+    td.verify(scroll.top($el, 100, 10, td.matchers.isA(Function)))
+  )
 })

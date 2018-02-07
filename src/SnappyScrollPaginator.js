@@ -14,6 +14,7 @@ class SnappyScrollPaginator extends PureComponent {
     axis: PropTypes.oneOf([Axis.X, Axis.Y]),
     children: PropTypes.node.isRequired,
     isEnabled: PropTypes.bool,
+    mayPaginate: PropTypes.bool,
     numPages: PropTypes.number.isRequired,
     onMount: PropTypes.func,
     onPaginate: PropTypes.func.isRequired,
@@ -25,6 +26,7 @@ class SnappyScrollPaginator extends PureComponent {
   static defaultProps = {
     axis: Axis.Y,
     isEnabled: true,
+    mayPaginate: true,
     onMount: () => {},
     page: 0,
     style: {},
@@ -58,6 +60,7 @@ class SnappyScrollPaginator extends PureComponent {
     const {
       axis,
       isEnabled,
+      mayPaginate,
       numPages,
       onPaginate,
       page,
@@ -70,6 +73,10 @@ class SnappyScrollPaginator extends PureComponent {
 
     evt.preventDefault()
     evt.stopPropagation()
+
+    if (mayPaginate === false) {
+      return
+    }
 
     const d = axis === Axis.X ? evt.deltaX : evt.deltaY
     if (Math.abs(d) >= velocityThreshold) {

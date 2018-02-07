@@ -34,6 +34,7 @@ test.beforeEach(() => {
   paginatorX = mount(
     <SnappyScrollPaginator
       isEnabled
+      mayPaginate
       axis={Axis.X}
       page={1}
       numPages={3}
@@ -50,6 +51,7 @@ test.beforeEach(() => {
   paginatorY = mount(
     <SnappyScrollPaginator
       isEnabled
+      mayPaginate
       axis={Axis.Y}
       page={1}
       numPages={3}
@@ -118,6 +120,14 @@ test('stops wheel event propagation when enabled', t => {
 
 test('does not call onPaginate() when isEnabled is false', t => {
   paginatorX.setProps({ isEnabled: false })
+  paginatorX.simulate('wheel', { deltaX: 100, preventDefault, stopPropagation })
+  t.throws(() =>
+    td.verify(onPaginateX(td.matchers.isA(Number), td.matchers.anything()))
+  )
+})
+
+test('does not call onPaginate() when mayPaginate is false', t => {
+  paginatorX.setProps({ mayPaginate: false })
   paginatorX.simulate('wheel', { deltaX: 100, preventDefault, stopPropagation })
   t.throws(() =>
     td.verify(onPaginateX(td.matchers.isA(Number), td.matchers.anything()))

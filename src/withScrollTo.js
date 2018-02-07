@@ -1,67 +1,90 @@
 /* eslint no-param-reassign: 0 */
-import {
-  compose,
-  defaultProps,
-  mapProps,
-  setPropTypes,
-  withProps,
-  withStateHandlers,
-} from 'recompose'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import scroll from 'scroll'
+import { autobind } from 'core-decorators'
 
 import { Axis } from './constants.js'
 
-function scrollElementTo($el, axis, offset, duration) {
+function scrollElementTo($el, axis, offset, duration, cb = () => {}) {
   if (axis === Axis.X) {
-    scroll.left($el, offset, duration)
+    scroll.left($el, offset, duration, cb)
   } else if (axis === Axis.Y) {
-    scroll.top($el, offset, duration)
+    scroll.top($el, offset, duration, cb)
   }
 }
 
 export default function withScrollTo(Component) {
-  return compose(
-    setPropTypes({
+  return class ComponentWithScrollTo extends PureComponent {
+    static propTypes = {
+      axis: PropTypes.oneOf([Axis.X, Axis.Y]),
       initialPage: PropTypes.number,
+      pageHeight: PropTypes.number,
+      pageWidth: PropTypes.number,
       scrollDuration: PropTypes.number,
-    }),
-    withStateHandlers(
-      ({ initialPage }) => ({
-        page: initialPage,
-      }),
-      {
-        onPaginate: (_, { axis, pageHeight, pageWidth, scrollDuration }) => (
-          newPage,
-          $el
-        ) => {
-          scrollElementTo(
-            $el,
-            axis,
-            newPage * (axis === Axis.X ? pageWidth : pageHeight),
-            scrollDuration
-          )
+    }
 
-          return { page: newPage }
-        },
-      }
-    ),
-    defaultProps({
+    static defaultProps = {
+      axis: Axis.Y,
       initialPage: 0,
+      pageHeight: 0,
+      pageWidth: 0,
       scrollDuration: 0,
-    }),
-    withProps(
-      ({ axis, initialPage, pageHeight, pageWidth, scrollDuration }) => ({
-        onMount: $el => {
-          scrollElementTo(
-            $el,
-            axis,
-            initialPage * (axis === Axis.X ? pageWidth : pageHeight),
-            scrollDuration
-          )
-        },
+    }
+
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        isScrolling: false,
+        page: props.initialPage,
+      }
+    }
+
+    @autobind
+    handleMount($el) {
+      const { axis, pageHeight, pageWidth } = this.props
+      const { page } = this.state
+
+      scrollElementTo(
+        $el,
+        axis,
+        page * (axis === Axis.X ? pageWidth : pageHeight),
+        0
+      )
+    }
+
+    @autobind
+    handlePaginate(page, $el) {
+      const { axis, pageHeight, pageWidth, scrollDuration } = this.props
+
+      this.setState({
+        isScrolling: true,
+        page,
       })
-    ),
-    mapProps(({ initialPage, ...props }) => props)
-  )(Component)
+
+      scrollElementTo(
+        $el,
+        axis,
+        page * (axis === Axis.X ? pageWidth : pageHeight),
+        scrollDuration,
+        () => this.setState({ isScrolling: false })
+      )
+    }
+
+    render() {
+      const { initialPage, scrollDuration, ...props } = this.props
+      const { isScrolling, page } = this.state
+
+      return (
+        <Component
+          page={page}
+          mayPaginate={isScrolling === false}
+          onMount={this.handleMount}
+          onPaginate={this.handlePaginate}
+          {...props}
+        />
+      )
+    }
+  }
 }
