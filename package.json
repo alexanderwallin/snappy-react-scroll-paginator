@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Your good pal in composing snappy, scroll-based pagination components in React",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "tests",
+    "animatedScrollTo.js"
+  ],
   "scripts": {
     "build": "babel --out-dir dist src",
     "postbuild": "cpy dist/animatedScrollTo.js ./dist",
