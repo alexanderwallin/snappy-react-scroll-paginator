@@ -68,16 +68,6 @@ test('passes on the style prop to the root element', t => {
   t.is(paginatorY.props().style, style)
 })
 
-test('has correct initial scroll position', t => {
-  t.is(paginatorX.instance().$el.scrollLeft, 100)
-  t.is(paginatorY.instance().$el.scrollTop, 100)
-})
-
-test('updates scroll position when page prop changes', t => {
-  paginatorY.setProps({ page: 1 })
-  t.is(paginatorY.instance().$el.scrollTop, 100)
-})
-
 test('stops scroll event propagation', t => {
   paginatorX.simulate('scroll', { preventDefault, stopPropagation })
   t.notThrows(() => td.verify(preventDefault()))
@@ -90,21 +80,17 @@ test('stops wheel event propagation', t => {
   t.notThrows(() => td.verify(stopPropagation()))
 })
 
-test('calls onPaginate prop with new page number when scroll velocity threshold is reached', t => {
-  paginatorY
-    .instance()
-    .handleWheel({ deltaY: 0, preventDefault, stopPropagation })
-  t.throws(() => td.verify(onPaginateY(td.matchers.anything())))
+test('calls onPaginate prop when scroll velocity threshold is reached', t => {
+  paginatorY.simulate('wheel', { deltaY: 0, preventDefault, stopPropagation })
+  t.throws(() =>
+    td.verify(onPaginateY(td.matchers.isA(Number), td.matchers.anything()))
+  )
 
-  paginatorY
-    .instance()
-    .handleWheel({ deltaY: 10, preventDefault, stopPropagation })
-  t.notThrows(() => td.verify(onPaginateY(2)))
+  paginatorY.simulate('wheel', { deltaY: 10, preventDefault, stopPropagation })
+  t.notThrows(() => td.verify(onPaginateY(2, td.matchers.anything())))
 
-  paginatorY
-    .instance()
-    .handleWheel({ deltaY: -10, preventDefault, stopPropagation })
-  t.notThrows(() => td.verify(onPaginateY(0)))
+  paginatorY.simulate('wheel', { deltaY: -10, preventDefault, stopPropagation })
+  t.notThrows(() => td.verify(onPaginateY(0, td.matchers.anything())))
 })
 
 test('does not paginate outside range', t => {

@@ -44,7 +44,6 @@ class SnappyScrollPaginator extends PureComponent {
   @autobind
   handleRef($el) {
     this.$el = $el
-    this.updateScrollPosition()
   }
 
   @autobind
@@ -57,28 +56,10 @@ class SnappyScrollPaginator extends PureComponent {
     const d = axis === Axis.X ? evt.deltaX : evt.deltaY
     if (Math.abs(d) >= velocityThreshold) {
       if (d < 0 && page !== 0) {
-        onPaginate(page - 1)
+        onPaginate(page - 1, this.$el)
       } else if (d > 0 && page < numPages - 1) {
-        onPaginate(page + 1)
+        onPaginate(page + 1, this.$el)
       }
-    }
-  }
-
-  updateScrollPosition() {
-    const { axis, page, pageHeight, pageWidth } = this.props
-
-    if (axis === Axis.X) {
-      this.$el.scrollLeft = page * pageWidth
-    } else if (axis === Axis.Y) {
-      this.$el.scrollTop = page * pageHeight
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { page } = this.props
-
-    if (page !== prevProps.page) {
-      this.updateScrollPosition()
     }
   }
 

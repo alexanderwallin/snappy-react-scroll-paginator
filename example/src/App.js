@@ -21,8 +21,10 @@ class App extends PureComponent {
   }
 
   @autobind
-  handlePaginate(page) {
+  handlePaginate(page, $el) {
     this.setState({ page })
+
+    $el.scrollTop = page * 200
   }
 
   render() {
