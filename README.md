@@ -56,10 +56,11 @@ const AnimatingSnappyScrollPaginator = withPaginationState(
 
 ## API
 
+* [`animatedScrollTo()`](#animatedscrolltoel-htmlelement-axis-axis-offset-number-duration-number-cb-funtion)
 * [`Axis`](#axis)
 * [`<SnappyScrollPaginator />`](snappyscrollpaginator-)
+* [`withPaginationState()`](#withpaginationstatecomponent-snappyscrollpaginator--component)
 * [`withScrollTo()`](#withscrolltocomponent-snappyscrollpaginator--component)
-* [`animatedScrollTo()`](#animatedscrolltoel-htmlelement-axis-axis-offset-number-duration-number-cb-funtion)
 
 ### `Axis`
 
@@ -91,7 +92,7 @@ It is stupid in the sense that **it doesn't keep any state on what page it is on
 * `style` - A style object
 * `velocityThreshold` - How fast the user must be scrolling before triggering pagination. This means `deltaX` or `deltaY` (depending on the axis) must be greater or equal to this value.
 
-### `withPaginationState(Component: SnappyScrollPaginator) => Component`
+### `withPaginationState(Component: SnappyScrollPaginator) => Component`
 
 This function returns a component that keeps track of the current page.
 
