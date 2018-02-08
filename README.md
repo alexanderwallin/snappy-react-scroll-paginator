@@ -43,7 +43,7 @@ const AnimatingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
   scrollPause={500}
   scrollTo={animatedScrollTo}
   style={{
-    height: 200,
+    height: 500,
     overflow: 'hidden',
   }}
 >
