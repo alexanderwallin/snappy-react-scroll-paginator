@@ -4,6 +4,7 @@ import { autobind } from 'core-decorators'
 import animatedScrollTo from '../../src/animatedScrollTo.js'
 import { Axis } from '../../src/constants.js'
 import SnappyScrollPaginator from '../../src/SnappyScrollPaginator.js'
+import withPaginationState from '../../src/withPaginationState.js'
 import withScrollTo from '../../src/withScrollTo.js'
 
 const pages = [
@@ -15,7 +16,9 @@ const pages = [
 
 const colors = ['red', 'green', 'blue', 'pink']
 
-const ScrollingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
+const ScrollingSnappyScrollPaginator = withPaginationState(
+  withScrollTo(SnappyScrollPaginator)
+)
 
 function uglyScroll($el, axis, offset, duration, cb = () => {}) {
   window.setTimeout(() => {

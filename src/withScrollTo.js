@@ -10,7 +10,8 @@ export default function withScrollTo(Component) {
   class ComponentWithScrollTo extends PureComponent {
     static propTypes = {
       axis: PropTypes.oneOf([Axis.X, Axis.Y]),
-      initialPage: PropTypes.number,
+      onPaginate: PropTypes.func,
+      page: PropTypes.number,
       pageSize: PropTypes.number,
       scrollDuration: PropTypes.number,
       scrollPause: PropTypes.number,
@@ -19,7 +20,8 @@ export default function withScrollTo(Component) {
 
     static defaultProps = {
       axis: Axis.Y,
-      initialPage: 0,
+      onPaginate: () => {},
+      page: 0,
       pageSize: 0,
       scrollDuration: 0,
       scrollPause: 0,
@@ -31,14 +33,12 @@ export default function withScrollTo(Component) {
 
       this.state = {
         isScrolling: false,
-        page: props.initialPage,
       }
     }
 
     @autobind
     handleMount($el) {
-      const { axis, pageSize, scrollTo } = this.props
-      const { page } = this.state
+      const { axis, page, pageSize, scrollTo } = this.props
 
       scrollTo($el, axis, page * pageSize, 1)
     }
@@ -47,35 +47,36 @@ export default function withScrollTo(Component) {
     handlePaginate(page, $el) {
       const {
         axis,
+        onPaginate,
         pageSize,
         scrollDuration,
         scrollPause,
         scrollTo,
       } = this.props
 
-      this.setState({
-        isScrolling: true,
-        page,
-      })
-
       scrollTo($el, axis, page * pageSize, scrollDuration, () => {
         window.setTimeout(() => {
           this.setState({ isScrolling: false })
         }, scrollPause)
       })
+
+      this.setState({ isScrolling: true }, () => {
+        // Bubble
+        onPaginate(page, $el)
+      })
     }
 
     render() {
-      const { initialPage, scrollDuration, scrollTo, ...props } = this.props
-      const { isScrolling, page } = this.state
+      const { page, scrollDuration, scrollTo, ...props } = this.props
+      const { isScrolling } = this.state
 
       return (
         <Component
+          {...props}
           page={page}
           mayPaginate={isScrolling === false}
           onMount={this.handleMount}
           onPaginate={this.handlePaginate}
-          {...props}
         />
       )
     }
