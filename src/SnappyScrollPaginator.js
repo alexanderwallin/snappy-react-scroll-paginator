@@ -43,7 +43,7 @@ class SnappyScrollPaginator extends PureComponent {
     const { isEnabled, mayPaginate, onPaginate, page } = this.props
 
     if (isEnabled === true && mayPaginate === true && page !== prevProps.page) {
-      onPaginate(page, this.$el)
+      onPaginate(page, this.$el, { triggeredFromScroll: false })
     }
   }
 
@@ -103,9 +103,9 @@ class SnappyScrollPaginator extends PureComponent {
     const d = axis === Axis.X ? evt.deltaX : evt.deltaY
     if (Math.abs(d) >= velocityThreshold) {
       if (d < 0 && page !== 0) {
-        onPaginate(page - 1, this.$el)
+        onPaginate(page - 1, this.$el, { triggeredFromScroll: true })
       } else if (d > 0 && page < numPages - 1) {
-        onPaginate(page + 1, this.$el)
+        onPaginate(page + 1, this.$el, { triggeredFromScroll: true })
       }
     }
   }

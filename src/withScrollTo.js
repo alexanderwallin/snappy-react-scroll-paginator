@@ -44,7 +44,7 @@ export default function withScrollTo(Component) {
     }
 
     @autobind
-    handlePaginate(page, $el) {
+    handlePaginate(page, $el, details) {
       const {
         axis,
         onPaginate,
@@ -62,7 +62,7 @@ export default function withScrollTo(Component) {
 
       this.setState({ isScrolling: true }, () => {
         // Bubble
-        onPaginate(page, $el)
+        onPaginate(page, $el, details)
       })
     }
 

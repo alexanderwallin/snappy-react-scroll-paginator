@@ -23,12 +23,12 @@ export default function withPaginationState(Component) {
     }
 
     @autobind
-    handlePaginate(page, $el) {
+    handlePaginate(page, $el, details) {
       const { onPaginate } = this.props
 
       this.setState({ page }, () => {
         // Bubble
-        onPaginate(page, $el)
+        onPaginate(page, $el, details)
       })
     }
 

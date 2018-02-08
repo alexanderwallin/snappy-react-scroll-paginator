@@ -169,27 +169,51 @@ test('does not call onPaginate() when mayPaginate is false', t => {
 test('calls onPaginate prop when scroll velocity threshold is reached', t => {
   paginatorY.simulate('wheel', { deltaY: 0, preventDefault, stopPropagation })
   t.throws(() =>
-    td.verify(onPaginateY(td.matchers.isA(Number), td.matchers.anything()))
+    td.verify(
+      onPaginateY(td.matchers.isA(Number), td.matchers.anything(), {
+        triggeredFromScroll: true,
+      })
+    )
   )
 
   paginatorY.simulate('wheel', { deltaY: 10, preventDefault, stopPropagation })
-  t.notThrows(() => td.verify(onPaginateY(2, td.matchers.anything())))
+  t.notThrows(() =>
+    td.verify(
+      onPaginateY(2, td.matchers.anything(), { triggeredFromScroll: true })
+    )
+  )
 
   paginatorY.simulate('wheel', { deltaY: -10, preventDefault, stopPropagation })
-  t.notThrows(() => td.verify(onPaginateY(0, td.matchers.anything())))
+  t.notThrows(() =>
+    td.verify(
+      onPaginateY(0, td.matchers.anything(), { triggeredFromScroll: true })
+    )
+  )
 })
 
 test('calls onPaginate prop when the page prop changes', t => {
   paginatorX.setProps({ page: 2 })
-  t.notThrows(() => td.verify(onPaginateX(2, td.matchers.anything())))
+  t.notThrows(() =>
+    td.verify(
+      onPaginateX(2, td.matchers.anything(), { triggeredFromScroll: false })
+    )
+  )
 
   paginatorX.setProps({ isEnabled: false })
   paginatorX.setProps({ page: 0 })
-  t.throws(() => td.verify(onPaginateX(0, td.matchers.anything())))
+  t.throws(() =>
+    td.verify(
+      onPaginateX(0, td.matchers.anything(), { triggeredFromScroll: false })
+    )
+  )
 
   paginatorX.setProps({ isEnabled: true, mayPaginate: false })
   paginatorX.setProps({ page: 1 })
-  t.throws(() => td.verify(onPaginateX(0, td.matchers.anything())))
+  t.throws(() =>
+    td.verify(
+      onPaginateX(0, td.matchers.anything(), { triggeredFromScroll: false })
+    )
+  )
 })
 
 test('does not paginate outside range', t => {

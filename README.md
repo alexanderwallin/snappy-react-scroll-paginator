@@ -86,7 +86,10 @@ It is stupid in the sense that **it doesn't keep any state on what page it is on
 * `mayPaginate` - Whether pagination should take place. This will not affect event cancellation, which means you can capture scrolling behaviour while pausing actual pagination.
 * `numPages` - How many pages are in the paginator
 * `onMount($el: HTMLElement)` - A function that is called then component has been rendered. `$el` is a reference to the root element.
-* `onPaginate(page: Number, $el: HTMLElement)` - A function that is called when a pagination takes place. `$el` is a reference to the root element.
+* `onPaginate(page: Number, $el: HTMLElement, details: Object)` - A function that is called when a pagination takes place.
+  * `page` - The page index that has been paginated to
+  * `$el` - A reference to the root element.
+  * `details.triggeredFromScroll` - An boolean indicating whether the pagination was triggered from a scroll event or not
 * `page` - The index of the current page
 * `scrollWobbleThreshold` - The amount of scrolling along the wrong axis that is allowed before the component steps aside and lets the wheel events bubble.
 * `style` - A style object
