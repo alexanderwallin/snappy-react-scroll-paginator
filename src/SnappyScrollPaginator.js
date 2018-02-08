@@ -43,8 +43,10 @@ class SnappyScrollPaginator extends PureComponent {
   handleRef($el) {
     const { onMount } = this.props
 
-    onMount($el)
-    this.$el = $el
+    if ($el !== null) {
+      onMount($el)
+      this.$el = $el
+    }
   }
 
   @autobind
@@ -99,6 +101,14 @@ class SnappyScrollPaginator extends PureComponent {
       }
     }
   }
+
+  // componentDidUpdate(prevProps) {
+  //   const { onPaginate, page } = this.props
+
+  //   if (page !== prevProps.page) {
+  //     onPaginate(page, this.$el)
+  //   }
+  // }
 
   render() {
     const { children, className, style } = this.props
