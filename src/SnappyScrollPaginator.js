@@ -102,13 +102,13 @@ class SnappyScrollPaginator extends PureComponent {
     }
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const { onPaginate, page } = this.props
+  componentDidUpdate(prevProps) {
+    const { isEnabled, mayPaginate, onPaginate, page } = this.props
 
-  //   if (page !== prevProps.page) {
-  //     onPaginate(page, this.$el)
-  //   }
-  // }
+    if (isEnabled === true && mayPaginate === true && page !== prevProps.page) {
+      onPaginate(page, this.$el)
+    }
+  }
 
   render() {
     const { children, className, style } = this.props

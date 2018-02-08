@@ -16,9 +16,59 @@ const pages = [
 
 const colors = ['red', 'green', 'blue', 'pink']
 
-const ScrollingSnappyScrollPaginator = withPaginationState(
-  withScrollTo(SnappyScrollPaginator)
+const children = pages.map((p, i) => (
+  <div
+    key={p.title}
+    style={{
+      height: 200,
+      backgroundColor: colors[i],
+    }}
+  >
+    {p.title}
+  </div>
+))
+
+const ScrollingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
+
+const StatefulScrollingSnappyScrollPaginator = withPaginationState(
+  ScrollingSnappyScrollPaginator
 )
+
+class Carousel extends PureComponent {
+  state = {
+    page: 0,
+  }
+
+  componentDidMount() {
+    window.setInterval(
+      () => this.setState({ page: (this.state.page + 1) % pages.length }),
+      1000
+    )
+  }
+
+  render() {
+    const { page } = this.state
+
+    return (
+      <ScrollingSnappyScrollPaginator
+        axis={SnappyScrollPaginator.Axis.Y}
+        page={page}
+        numPages={pages.length}
+        pageSize={200}
+        velocityThreshold={30}
+        scrollDuration={500}
+        scrollPause={500}
+        scrollTo={animatedScrollTo}
+        style={{
+          height: 200,
+          overflow: 'hidden',
+        }}
+      >
+        {children}
+      </ScrollingSnappyScrollPaginator>
+    )
+  }
+}
 
 function uglyScroll($el, axis, offset, duration, cb = () => {}) {
   window.setTimeout(() => {
@@ -47,18 +97,6 @@ class App extends PureComponent {
   render() {
     const { page } = this.state
 
-    const children = pages.map((p, i) => (
-      <div
-        key={p.title}
-        style={{
-          height: 200,
-          backgroundColor: colors[i],
-        }}
-      >
-        {p.title}
-      </div>
-    ))
-
     return (
       <div className="App">
         <h2>
@@ -82,7 +120,7 @@ class App extends PureComponent {
         <h2>
           <code>withScrollTo(SnappyScrollPaginator)</code>
         </h2>
-        <ScrollingSnappyScrollPaginator
+        <StatefulScrollingSnappyScrollPaginator
           axis={SnappyScrollPaginator.Axis.Y}
           initialPage={2}
           numPages={pages.length}
@@ -97,12 +135,12 @@ class App extends PureComponent {
           }}
         >
           {children}
-        </ScrollingSnappyScrollPaginator>
+        </StatefulScrollingSnappyScrollPaginator>
 
         <h2>
           <code>withScrollTo(SnappyScrollPaginator)</code> (x axis)
         </h2>
-        <ScrollingSnappyScrollPaginator
+        <StatefulScrollingSnappyScrollPaginator
           axis={SnappyScrollPaginator.Axis.X}
           initialPage={1}
           numPages={pages.length}
@@ -131,10 +169,10 @@ class App extends PureComponent {
               </div>
             ))}
           </div>
-        </ScrollingSnappyScrollPaginator>
+        </StatefulScrollingSnappyScrollPaginator>
 
         <h2>Nested paginators</h2>
-        <ScrollingSnappyScrollPaginator
+        <StatefulScrollingSnappyScrollPaginator
           axis={SnappyScrollPaginator.Axis.X}
           initialPage={0}
           numPages={2}
@@ -157,7 +195,7 @@ class App extends PureComponent {
             </div>
 
             <div style={{ width: 200, height: '100%' }}>
-              <ScrollingSnappyScrollPaginator
+              <StatefulScrollingSnappyScrollPaginator
                 axis={SnappyScrollPaginator.Axis.Y}
                 initialPage={0}
                 numPages={pages.length}
@@ -173,10 +211,13 @@ class App extends PureComponent {
                 }}
               >
                 {children}
-              </ScrollingSnappyScrollPaginator>
+              </StatefulScrollingSnappyScrollPaginator>
             </div>
           </div>
-        </ScrollingSnappyScrollPaginator>
+        </StatefulScrollingSnappyScrollPaginator>
+
+        <h2>Carousel</h2>
+        <Carousel />
       </div>
     )
   }

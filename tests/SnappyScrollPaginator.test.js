@@ -179,6 +179,19 @@ test('calls onPaginate prop when scroll velocity threshold is reached', t => {
   t.notThrows(() => td.verify(onPaginateY(0, td.matchers.anything())))
 })
 
+test('calls onPaginate prop when the page prop changes', t => {
+  paginatorX.setProps({ page: 2 })
+  t.notThrows(() => td.verify(onPaginateX(2, td.matchers.anything())))
+
+  paginatorX.setProps({ isEnabled: false })
+  paginatorX.setProps({ page: 0 })
+  t.throws(() => td.verify(onPaginateX(0, td.matchers.anything())))
+
+  paginatorX.setProps({ isEnabled: true, mayPaginate: false })
+  paginatorX.setProps({ page: 1 })
+  t.throws(() => td.verify(onPaginateX(0, td.matchers.anything())))
+})
+
 test('does not paginate outside range', t => {
   paginatorY
     .instance()
