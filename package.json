@@ -1,6 +1,6 @@
 {
   "name": "snappy-react-scroll-paginator",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Your good pal in composing snappy, scroll-based pagination components in React",
   "main": "dist/index.js",
   "files": [
