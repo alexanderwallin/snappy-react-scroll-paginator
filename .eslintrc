@@ -12,6 +12,15 @@
     "import/no-extraneous-dependencies": ["error", {
       "optionalDependencies": true,
     }],
-    "react/jsx-filename-extension": 0
+    "react/jsx-filename-extension": 0,
+    "react/sort-comp": ["error", {
+      "order": [
+        "static-methods",
+        "instance-variables",
+        "lifecycle",
+        "everything-else",
+        "render",
+      ]
+    }]
   }
 }
