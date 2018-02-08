@@ -27,11 +27,14 @@ This is a typical animating scroll paginator.
 import {
   SnappyScrollPaginator,
   Axis,
+  withPaginationState,
   withScrollTo,
   animatedScrollTo,
 } from 'snappy-react-scroll-paginator'
 
-const AnimatingSnappyScrollPaginator = withScrollTo(SnappyScrollPaginator)
+const AnimatingSnappyScrollPaginator = withPaginationState(
+  withScrollTo(SnappyScrollPaginator)
+)
 
 <AnimatingSnappyScrollPaginator
   axis={Axis.Y}
@@ -71,7 +74,7 @@ Axis.Y // === 'Y'
 
 This component is both pretty smart and quite stupid. It is smart in the sense that it captures `wheel` events and invokes `onPaginate()` when the direction and velocity of the scroll meets certain criteria provided in the props.
 
-It is stupid in the sense that **it doesn't keep any state on what page it is on**. It is up to you to store this in a stateful/smart (higher-order) component. Now, before you run off in complete panic, we do provide the [`withScrollTo()`](#withscrolltocomponent-snappyscrollpaginator--component) decorator that takes care of most of that stuff.
+It is stupid in the sense that **it doesn't keep any state on what page it is on**. It is up to you to store this in a stateful/smart (higher-order) component. Now, before you run off in complete panic, we do provide the [`withPaginationState()`](#withpaginationstatecomponent-snappyscrollpaginator--component) and [`withScrollTo()`](#withscrolltocomponent-snappyscrollpaginator--component) decorators that takes care of most of that stuff.
 
 #### Props
 
@@ -88,6 +91,15 @@ It is stupid in the sense that **it doesn't keep any state on what page it is on
 * `style` - A style object
 * `velocityThreshold` - How fast the user must be scrolling before triggering pagination. This means `deltaX` or `deltaY` (depending on the axis) must be greater or equal to this value.
 
+### `withPaginationState(Component: SnappyScrollPaginator) => Component`
+
+This function returns a component that keeps track of the current page.
+
+#### Result component props
+
+* `initialPage` - Which page to start at
+* All props supported by `<SnappyScrollPaginator />`
+
 ### `withScrollTo(Component: SnappyScrollPaginator) => Component`
 
 This little bugger turns `<SnappyScrollPaginator />` into an actual scrolling paginator. Well, almost; you need to provide it a function that handles scrolling, but other than that you're good!
@@ -98,12 +110,11 @@ The default behavior - the default value of the `scrollTo` prop - is to do absol
 
 #### Result component props
 
-* `axis` - Which axis to paginate along
-* `initialPage` - Which page to start at
 * `pageSize` - How wide or tall each page is
 * `scrollDuration` - How long a scroll animation should be
 * `scrollPause` - How long to wait after a scroll animation has completed before re-enabling pagination
 * `scrollTo($el: HTMLElement, axis: Axis, offset: Number, duration: Number, cb: Funtion)` - A function which should scroll `$el` to `offset` along `axis` for `duration` milliseconds, and call `cb()` when it's done.
+* All props supported by `<SnappyScrollPaginator />`
 
 ### `animatedScrollTo($el: HTMLElement, axis: Axis, offset: Number, duration: Number, cb: Funtion)`
 
